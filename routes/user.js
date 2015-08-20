@@ -1,12 +1,25 @@
 /**
  * Created by Roman on 20.08.2015.
  */
-module.exports = function(app){
-    app.get('/user', function(req, res, next){
+module.exports = (function(){
+    var express = require('express');
+
+    var userRouter = express.Router();
+
+    userRouter.get('/', function(req, res, next){
         console.log(req.myVar);
         res.status(200).send(req.ip);
     });
-    app.post('/user', function(req, res, next){
+    userRouter.post('/:login/:weight', function(req, res, next){
+        var login = req.params.login;
+        var weight = req.params.weight;
+
+        res.status(200).send({login: login, weight: weight});
+    });
+    userRouter.post('/', function(req, res, next){
         res.status(200).send(req.body);
     });
-};
+
+
+    return userRouter;
+})();

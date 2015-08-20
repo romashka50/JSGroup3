@@ -2,6 +2,10 @@
  * Created by Roman on 20.08.2015.
  */
 module.exports = function(app){
+    var bodyParser = require('body-parser');
+
+    var userRouter = require('./user');
+
     function ipParser(req, res, next){
         req.myVar = 'sdfsdf';
         next();
@@ -17,4 +21,7 @@ module.exports = function(app){
         console.log(req.myVar);
         res.status(200).send(req.ip);
     });
+
+    app.use('/user', userRouter);
+
 };
