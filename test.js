@@ -9,6 +9,8 @@ require('./routes')(app);
 //'============ Load Routes ==============';
 
 
+var myModule = require('./handlers/user');
+
 app.listen(port, function(){
     console.log('Server start success = ' + port);
 });

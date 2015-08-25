@@ -22,6 +22,6 @@ module.exports = function(app){
         res.status(200).send(req.ip);
     });
 
-    app.use('/user', userRouter);
+    app.use('/user', userRouter); //http://user/pupkin/90
 
 };
