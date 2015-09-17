@@ -6,22 +6,17 @@ module.exports = function(app){
 
     var userRouter = require('./user');
 
-    function ipParser(req, res, next){
-        req.myVar = 'sdfsdf';
-        next();
-    };
-
-    function validateSession(req, res, next){
-        //some logyc
-        next();
-    };
-
     app.use(bodyParser.json());
     app.get('/', function(req, res, next){
-        console.log(req.myVar);
         res.status(200).send(req.ip);
     });
 
     app.use('/user', userRouter); //http://user/pupkin/90
+
+    app.use(function(err, req, res, next){
+        var status = err.status || 500;
+
+        res.status(status).send(err);
+    });
 
 };
