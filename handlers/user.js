@@ -1,21 +1,50 @@
-/**
- * Created by Roman on 25.08.2015.
- */
-var User = function(){
-    this.create = function(req, res, next){
-        res.status(200).send(req.body);
-    } ;
+var mongoose = require('mongoose');
+var UserSchema = mongoose.schemas.User;
+var PostSchema = mongoose.schemas.Post;
+var _User = mongoose.model('user', UserSchema);
+var Post = mongoose.model('post', PostSchema);
 
-    this.updateUser = function(req, res, next){
-        var login = req.params.login;
-        var weight = req.params.weight;
+var User = function () {
+    this.create = function (req, res, next) {
+        var body = req.body;
 
-        res.status(200).send({login: login, weight: weight});
+        var user = new _User(body);
+
+        user.save(function (err, user) {
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200).send(user);
+        });
     };
 
-    this.getAll = function(req, res, next){
-        console.log(req.myVar);
-        res.status(200).send(req.ip);
+    this.remove = function (req, res, next) {
+        var id = req.params.id;
+
+        _User.findByIdAndRemove(id, function (err, response) {
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200).send(response);
+        });
+
+
+    };
+
+    this.getAll = function (req, res, next) {
+        _User
+            .find()
+            .populate('posts', '-_id')
+            .lean()
+            .exec(function (err, response) {
+                if (err) {
+                    return next(err);
+                }
+
+                res.status(200).send(response);
+            });
     }
 };
 

@@ -8,7 +8,7 @@ module.exports = (function(){
     var userHandler = new UserHandelr();
 
     userRouter.get('/', userHandler.getAll);
-    userRouter.post('/:login/:weight', userHandler.updateUser);
+    userRouter.delete('/:id', userHandler.remove);
     userRouter.post('/', userHandler.create);
 
 
