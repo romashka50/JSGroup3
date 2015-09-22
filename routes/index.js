@@ -7,6 +7,7 @@ module.exports = function(app){
     var userRouter = require('./user');
 
     app.use(bodyParser.json());
+    
     app.get('/', function(req, res, next){
         res.status(200).send(req.ip);
     });
