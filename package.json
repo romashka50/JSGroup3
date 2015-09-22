@@ -21,6 +21,8 @@
   "homepage": "https://github.com/romashka50/JSGroup3#readme",
   "dependencies": {
     "body-parser": "^1.13.3",
-    "express": "4.13.3"
+    "express": "4.13.3",
+    "mongodb": "^2.0.43",
+    "mongoose": "^4.1.7"
   }
 }
