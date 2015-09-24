@@ -1,17 +1,17 @@
 
 var UserHandler = function (app) {
 
-    var User = app.get('PostGre').Models.User;
+    var Post = app.get('PostGre').Models.Post;
 
     this.create = function (req, res, next) {
 
         var body = req.body;
 
-        User
+        Post
             .forge()
             .save(body)
-            .then(function (user) {
-                res.status(200).send(user);
+            .then(function (post) {
+                res.status(200).send(post);
             })
             .otherwise(next);
     };
@@ -20,36 +20,41 @@ var UserHandler = function (app) {
 
         var id = req.params.id;
 
-        User
+        Post
             .forge({id: id})
             .fetch()
-            .destroy(function (user) {
-                res.status(200).send(user);
+            .destroy(function (post) {
+                res.status(200).send(post);
             })
             .otherwise(next);
     };
 
     this.getAll = function (req, res, next) {
 
-        User
+        Post
             .fetchAll()
-            .then(function (users) {
-                res.status(200).send(users);
+            .then(function (posts) {
+                res.status(200).send(posts);
             })
             .otherwise(next)
-    }
+    };
 
     this.getOne = function (req, res, next) {
         var id = req.params.id;
 
-        User
+        Post
             .forge({id: id})
-            .fetch()
-            .then(function (user) {
-                res.status(200).send(user);
+            .fetch({
+                withRelated: ['author']
             })
-            .otherwise(next)
-    }
+            .then(function (post) {
+                res.status(200).send(post);
+            })
+            .otherwise(function(err){
+
+                next(err);
+            })
+    };
 };
 
 module.exports = UserHandler;

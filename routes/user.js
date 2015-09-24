@@ -1,16 +1,16 @@
-/**
- * Created by Roman on 20.08.2015.
- */
-module.exports = (function(){
+
+module.exports = function(app) {
+
     var express = require('express');
-    var UserHandelr = require('../handlers/user');
     var userRouter = express.Router();
-    var userHandler = new UserHandelr();
+
+    var UserHandler = require('../handlers/user');
+    var userHandler = new UserHandler(app);
 
     userRouter.get('/', userHandler.getAll);
-    userRouter.delete('/:id', userHandler.remove);
     userRouter.post('/', userHandler.create);
-
+    userRouter.get('/:id', userHandler.getOne);
+    userRouter.delete('/:id', userHandler.remove);
 
     return userRouter;
-})();
+};
