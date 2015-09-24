@@ -7,13 +7,21 @@ var UserHandler = function (app) {
 
         var body = req.body;
 
-        User
-            .forge()
+        var user = new User();
+
+        user
             .save(body)
-            .then(function (user) {
-                res.status(200).send(user);
+            .exec(function (err, userModel) {
+                if (err) {
+                    return next(err);
+                }
+
+                res.status(200).send(userModel);
+            });
+
+           /* .then(function (user) {
             })
-            .otherwise(next);
+            .otherwise(next);*/
     };
 
     this.remove = function (req, res, next) {
@@ -22,11 +30,14 @@ var UserHandler = function (app) {
 
         User
             .forge({id: id})
-            .fetch()
-            .destroy(function (user) {
+            .destroy()
+            .then(function (user) {
                 res.status(200).send(user);
             })
-            .otherwise(next);
+            .otherwise(function(err){
+                console.log(err);
+                next(err);
+            });
     };
 
     this.getAll = function (req, res, next) {
@@ -36,8 +47,8 @@ var UserHandler = function (app) {
             .then(function (users) {
                 res.status(200).send(users);
             })
-            .otherwise(next)
-    }
+            .catch(next)
+    };
 
     this.getOne = function (req, res, next) {
         var id = req.params.id;
@@ -49,6 +60,25 @@ var UserHandler = function (app) {
                 res.status(200).send(user);
             })
             .otherwise(next)
+    }
+
+    this.findByName = function(req, res, next) {
+
+        var name = req.params.name;
+
+        User
+            .query(function (qb) {
+                qb.where('first', name)
+            })
+            .fetch()
+            .exec(function (err, result) {
+                if (err) {
+                    return next(err);
+                }
+
+                res.status(200).send(result);
+            })
+
     }
 };
 

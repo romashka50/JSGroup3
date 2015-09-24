@@ -11,6 +11,7 @@ module.exports = function(app) {
     userRouter.post('/', userHandler.create);
     userRouter.get('/:id', userHandler.getOne);
     userRouter.delete('/:id', userHandler.remove);
+    userRouter.get('/find/:name', userHandler.findByName);
 
     return userRouter;
 };

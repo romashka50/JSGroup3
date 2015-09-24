@@ -5,7 +5,8 @@ module.exports = function (postGre) {
 
         author: function () {
             return this.belongsTo(postGre.Models.User);
-        }/*,
+        }
+        /*,
 
         toJSON: function () {
             var attributes = postGre.Model.prototype.toJSON.call(this);
