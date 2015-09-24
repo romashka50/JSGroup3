@@ -1,7 +1,12 @@
 
 var UserHandler = function (app) {
 
+    var Postgre = app.get('PostGre');
     var User = app.get('PostGre').Models.User;
+
+    var UserCollection = Postgre.Collection.extend({
+        model: User
+    });
 
     this.create = function (req, res, next) {
 
@@ -42,12 +47,22 @@ var UserHandler = function (app) {
 
     this.getAll = function (req, res, next) {
 
-        User
+       /* User
             .fetchAll()
             .then(function (users) {
                 res.status(200).send(users);
             })
-            .catch(next)
+            .catch(next)*/
+
+        UserCollection
+            .forge()
+            .fetch()
+            .then(function(models){
+                res.status(200).send(models);
+            })
+            .otherwise(function(err){
+                next(err);
+            })
     };
 
     this.getOne = function (req, res, next) {
