@@ -1,60 +1,73 @@
 
-var UserHandler = function (app) {
+var PostHandler = function (app) {
 
-    var Post = app.get('seq').Models.Post;
+    var sequelize = app.get('seq');
+    var Post = sequelize.Models.Post;
+    var User = sequelize.Models.User;
 
     this.create = function (req, res, next) {
 
         var body = req.body;
 
-        Post
-            .forge()
+        var post = Post.build(body);
+
+        post
             .save(body)
             .then(function (post) {
                 res.status(200).send(post);
             })
-            .otherwise(next);
+            .catch(next);
     };
 
     this.remove = function (req, res, next) {
 
         var id = req.params.id;
 
-        Post
-            .forge({id: id})
-            .fetch()
+        var post = Post.build({id: id});
+
+        post
             .destroy(function (post) {
                 res.status(200).send(post);
             })
-            .otherwise(next);
+            .catch(next);
     };
 
     this.getAll = function (req, res, next) {
 
         Post
-            .fetchAll()
+            .findAll()
             .then(function (posts) {
                 res.status(200).send(posts);
             })
-            .otherwise(next)
+            .catch(next)
+
+        /*
+        sequelize.query('SELECT * FROM "users"', { type: sequelize.QueryTypes.SELECT})
+            .then(function(users) {
+                res.status(200).send(users);
+            })
+            .catch(next);*/
     };
 
     this.getOne = function (req, res, next) {
         var id = req.params.id;
 
         Post
-            .forge({id: id})
-            .fetch({
-                withRelated: ['author']
+            .findById(id, {
+                include: [
+                    {
+                        model: User, attributes: ['first', 'last']
+                    }
+                ]
             })
             .then(function (post) {
                 res.status(200).send(post);
             })
-            .otherwise(function(err){
+            .catch(function(err){
 
                 next(err);
             })
     };
 };
 
-module.exports = UserHandler;
+module.exports = PostHandler;

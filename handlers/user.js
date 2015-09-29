@@ -3,6 +3,7 @@ var UserHandler = function (app) {
 
     var pgSequelize = app.get('seq');
     var User = pgSequelize.Models.User;
+    var Post = pgSequelize.Models.Post;
 
     this.create = function (req, res, next) {
 
@@ -44,7 +45,13 @@ var UserHandler = function (app) {
         var id = req.params.id;
 
         User
-            .findById(id)
+            .findById(id, {
+                include: [
+                    {
+                        model: Post
+                    }
+                ]
+            })
             .then(function (user) {
                 res.status(200).send(user);
             })
@@ -58,9 +65,9 @@ var UserHandler = function (app) {
         User
             .findOne({
                 where: {
-                    first: {
+                    first: name /*{
                         $like: name + '%'
-                    }
+                    }*/
                 }
             })
             .then(function (user) {

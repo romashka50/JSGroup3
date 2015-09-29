@@ -1,4 +1,4 @@
-var Sequelize = require("sequelize");
+var Sequelize = require('sequelize');
 
 module.exports = function (pgSequelize) {
 
@@ -10,7 +10,8 @@ module.exports = function (pgSequelize) {
         },
         title: Sequelize.STRING,
         description: Sequelize.STRING,
-        user_id: Sequelize.INTEGER,
+        user_id: Sequelize.INTEGER
+    }, {
         timestamps: false
     });
 
