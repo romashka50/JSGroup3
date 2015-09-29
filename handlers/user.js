@@ -1,80 +1,54 @@
 
 var UserHandler = function (app) {
 
-    var Postgre = app.get('PostGre');
-    var User = app.get('PostGre').Models.User;
-
-    var UserCollection = Postgre.Collection.extend({
-        model: User
-    });
+    var pgSequelize = app.get('seq');
+    var User = pgSequelize.Models.User;
 
     this.create = function (req, res, next) {
 
         var body = req.body;
 
-        var user = new User();
-
-        user
-            .save(body)
-            .exec(function (err, userModel) {
-                if (err) {
-                    return next(err);
-                }
-
-                res.status(200).send(userModel);
-            });
-
-           /* .then(function (user) {
+        User
+            .create(body)
+            .then(function(user){
+                res.status(200).send(user);
             })
-            .otherwise(next);*/
+            .catch(next)
     };
 
     this.remove = function (req, res, next) {
 
         var id = req.params.id;
 
-        User
-            .forge({id: id})
+        var user = User.build({id: id});
+
+        user
             .destroy()
-            .then(function (user) {
+            .then(function(user){
                 res.status(200).send(user);
             })
-            .otherwise(function(err){
-                console.log(err);
-                next(err);
-            });
+            .catch(next)
     };
 
     this.getAll = function (req, res, next) {
 
-       /* User
-            .fetchAll()
-            .then(function (users) {
-                res.status(200).send(users);
-            })
-            .catch(next)*/
-
-        UserCollection
-            .forge()
-            .fetch()
-            .then(function(models){
-                res.status(200).send(models);
-            })
-            .otherwise(function(err){
-                next(err);
-            })
+       User
+           .findAll()
+           .then(function(users){
+               res.status(200).send(users);
+           })
+           .catch(next)
     };
 
     this.getOne = function (req, res, next) {
         var id = req.params.id;
 
         User
-            .forge({id: id})
-            .fetch()
+            .findById(id)
             .then(function (user) {
                 res.status(200).send(user);
             })
-            .otherwise(next)
+            .catch(next)
     }
 
     this.findByName = function(req, res, next) {
@@ -82,18 +56,17 @@ var UserHandler = function (app) {
         var name = req.params.name;
 
         User
-            .query(function (qb) {
-                qb.where('first', name)
-            })
-            .fetch()
-            .exec(function (err, result) {
-                if (err) {
-                    return next(err);
+            .findOne({
+                where: {
+                    first: {
+                        $like: name + '%'
+                    }
                 }
-
-                res.status(200).send(result);
             })
-
+            .then(function (user) {
+                res.status(200).send(user);
+            })
+            .catch(next)
     }
 };
 

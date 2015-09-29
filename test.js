@@ -4,25 +4,22 @@ var app = express();
 
 var port = process.env.PORT || 3030;
 
-var knex = require('knex')({
-        debug: true,
-        client: 'pg',
-        connection: {
-            host: 'localhost',
-            user: 'postgres',
-            password: 'postgres',
-            port: 5432,
-            database: 'test_courses',
-            charset  : 'utf8'
-        }
-    }
-);
+var Sequelize = require("sequelize");
+var sequelize = new Sequelize('test_courses', 'postgres', 'postgres', {
+    host: 'localhost',
+    dialect: 'postgres', //'mysql'|'mariadb'|'sqlite'|'postgres'|'mssql',
 
-var PostGre = require('bookshelf')(knex);
-app.set('PostGre', PostGre);
+    pool: {
+        max: 5,
+        min: 0,
+        idle: 10000
+    }
+});
+
+app.set('seq', sequelize);
 
 var Model = require('./models/index');
-PostGre.Models = new Model(PostGre);
+sequelize.Models = new Model(sequelize);
 
 require('./routes')(app);
 

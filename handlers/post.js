@@ -1,7 +1,7 @@
 
 var UserHandler = function (app) {
 
-    var Post = app.get('PostGre').Models.Post;
+    var Post = app.get('seq').Models.Post;
 
     this.create = function (req, res, next) {
 
