@@ -11,7 +11,7 @@ module.exports = function(app) {
     app.use(bodyParser.json());
 
     app.get('/', function (req, res, next) {
-        res.status(200).send(req.ip);
+        res.sendfile('index.html');
     });
 
     app.use('/user', userRouter); //http://user/pupkin/90

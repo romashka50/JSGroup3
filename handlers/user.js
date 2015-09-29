@@ -1,13 +1,5 @@
 
 var UserHandler = function (app) {
-
-    var Postgre = app.get('PostGre');
-    var User = app.get('PostGre').Models.User;
-
-    var UserCollection = Postgre.Collection.extend({
-        model: User
-    });
-
     this.create = function (req, res, next) {
 
         var body = req.body;

@@ -1,8 +1,5 @@
 
 var UserHandler = function (app) {
-
-    var Post = app.get('PostGre').Models.Post;
-
     this.create = function (req, res, next) {
 
         var body = req.body;
