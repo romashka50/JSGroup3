@@ -1,3 +1,9 @@
-/**
- * Created by Roman on 29.09.2015.
- */
+define(['views/user'], function(user){
+	function init(){
+		new user().render();
+	}
+
+	return {
+		init: init
+	}
+});

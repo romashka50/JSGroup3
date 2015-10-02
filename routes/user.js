@@ -1,17 +1,15 @@
 
-module.exports = function(app) {
-
+module.exports = (function(){
     var express = require('express');
+    var UserHandelr = require('../handlers/user');
     var userRouter = express.Router();
-
-    var UserHandler = require('../handlers/user');
-    var userHandler = new UserHandler(app);
+    var userHandler = new UserHandelr();
 
     userRouter.get('/', userHandler.getAll);
-    userRouter.post('/', userHandler.create);
-    userRouter.get('/:id', userHandler.getOne);
+    userRouter.get('/:id', userHandler.getById);
     userRouter.delete('/:id', userHandler.remove);
-    userRouter.get('/find/:name', userHandler.findByName);
+    userRouter.post('/', userHandler.create);
+
 
     return userRouter;
-};
+})();

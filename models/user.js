@@ -1,34 +1,38 @@
-module.exports = function (postGre) {
+var mongoose = require('mongoose');
 
-    var UserModel = postGre.Model.extend({
-        tableName: 'users',
+var Schema = mongoose.Schema;
 
-        posts: function () {
-            return this.hasMany(postGre.Models.Post, 'user_id');
-        },
+var UserSchema = Schema({
+    name: {
+        first: {type: String, default: 'Ivan'},
+        last: {type: String, default: 'Pupkin'}
+    },
+    dateOfBirth: {type: Date, default: Date.now},
+    posts: [{type: Number, ref: 'post'}],
+    age: Number
+}, {collection: 'User', version: false});
 
-        initialize: function () {
-            this.on('destroying', this.removeAllDependencies);
-        },
+var PostSchema = Schema({
+    _id: Number,
+    name: String
+}, {collection: 'Post'});
 
-        removeAllDependencies: function (model) {
-            postGre.Models.Post
-                .query(function (qb) {
-                    qb.where('user_id', '=', model.id);
-                })
-                .fetchAll()
-                .then(function (posts) {
-                    for (var i = posts.length - 1; i >= 0; i--) {
-                        posts.models[i]
-                            .destroy()
-                            .then()
-                            .otherwise(function (err) {
-                                console.log('err on delete user posts: ' + err);
-                            })
-                    }
-                });
-        }
-    });
+UserSchema.pre('save', function(next){
+    var dOb = this.dateOfBirth;
 
-    return UserModel;
-};
+    this.age = (new Date() - new Date(dOb)) / 1000 / 60 / 60 / 24;
+
+    next();
+});
+
+UserSchema.virtual('fullName').get(function(){
+    return this.name.first + ' ' + this.name.last
+});
+
+
+
+UserSchema.set('toJSON', { virtuals: true });
+
+mongoose.schemas = {};
+mongoose.schemas.User = UserSchema;
+mongoose.schemas.Post = PostSchema;

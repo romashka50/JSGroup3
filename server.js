@@ -5,18 +5,12 @@ var app = express();
 var db;
 var port = process.env.PORT || 3030;
 
-mongoose.connect('localhost', 'testDb');
+require('./models');
+
+mongoose.connect('localhost', 'myTestDb');
 db = mongoose.connection;
 db.once('open', function(){
     require('./routes')(app);
-
-    app.use(function(req, res, next) {
-        //To allow cors domain requests
-
-       /* res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "X-Requested-With");
-        next();*/
-    });
 
     app.use(express.static(__dirname + '/public'));
 

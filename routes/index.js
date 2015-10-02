@@ -5,8 +5,8 @@ module.exports = function(app) {
 
     var bodyParser = require('body-parser');
 
-    var userRouter = require('./user')(app);
-    var postRouter = require('./post')(app);
+    var userRouter = require('./user');
+    //var postRouter = require('./post')(app);
 
     app.use(bodyParser.json());
 
@@ -14,8 +14,8 @@ module.exports = function(app) {
         res.sendfile('index.html');
     });
 
-    app.use('/user', userRouter); //http://user/pupkin/90
-    app.use('/post', postRouter);
+    app.use('/users', userRouter); //http://user/pupkin/90
+    //app.use('/post', postRouter);
 
     app.use(function (err, req, res, next) {
         var status = err.status || 500;

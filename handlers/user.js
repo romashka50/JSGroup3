@@ -1,92 +1,67 @@
+var mongoose = require('mongoose');
+var UserSchema = mongoose.schemas.User;
+var PostSchema = mongoose.schemas.Post;
+var _User = mongoose.model('user', UserSchema);
+var Post = mongoose.model('post', PostSchema);
 
-var UserHandler = function (app) {
-    this.create = function (req, res, next) {
+var User = function () {
+	this.create = function (req, res, next) {
+		var body = req.body;
 
-        var body = req.body;
+		var user = new _User(body);
 
-        var user = new User();
+		user.save(function (err, user) {
+			if (err) {
+				return next(err);
+			}
 
-        user
-            .save(body)
-            .exec(function (err, userModel) {
-                if (err) {
-                    return next(err);
-                }
+			res.status(200).send(user);
+		});
+	};
 
-                res.status(200).send(userModel);
-            });
+	this.remove = function (req, res, next) {
+		var id = req.params.id;
 
-           /* .then(function (user) {
-            })
-            .otherwise(next);*/
-    };
+		_User.findByIdAndRemove(id, function (err, response) {
+			if (err) {
+				return next(err);
+			}
 
-    this.remove = function (req, res, next) {
+			res.status(200).send(response);
+		});
 
-        var id = req.params.id;
 
-        User
-            .forge({id: id})
-            .destroy()
-            .then(function (user) {
-                res.status(200).send(user);
-            })
-            .otherwise(function(err){
-                console.log(err);
-                next(err);
-            });
-    };
+	};
 
-    this.getAll = function (req, res, next) {
+	this.getAll = function (req, res, next) {
+		_User
+			.find()
+			.populate('posts', '-_id')
+			.lean()
+			.exec(function (err, response) {
+				if (err) {
+					return next(err);
+				}
 
-       /* User
-            .fetchAll()
-            .then(function (users) {
-                res.status(200).send(users);
-            })
-            .catch(next)*/
+				res.status(200).send(response);
+			});
+	};
 
-        UserCollection
-            .forge()
-            .fetch()
-            .then(function(models){
-                res.status(200).send(models);
-            })
-            .otherwise(function(err){
-                next(err);
-            })
-    };
+	this.getById = function (req, res, next) {
+		var id = req.params.id;
 
-    this.getOne = function (req, res, next) {
-        var id = req.params.id;
+		_User
+			.findById(id)
+			//.populate('posts', '-_id')
+			.lean()
+			.exec(function (err, response) {
+				if (err) {
+					return next(err);
+				}
 
-        User
-            .forge({id: id})
-            .fetch()
-            .then(function (user) {
-                res.status(200).send(user);
-            })
-            .otherwise(next)
-    }
-
-    this.findByName = function(req, res, next) {
-
-        var name = req.params.name;
-
-        User
-            .query(function (qb) {
-                qb.where('first', name)
-            })
-            .fetch()
-            .exec(function (err, result) {
-                if (err) {
-                    return next(err);
-                }
-
-                res.status(200).send(result);
-            })
-
-    }
+				res.status(200).send(response);
+			});
+	}
 };
 
-module.exports = UserHandler;
+module.exports = User;
