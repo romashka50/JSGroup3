@@ -1,5 +1,6 @@
 var express = require('express');
 var mongoose = require('mongoose');
+var morgan = require('morgan');
 
 var app = express();
 var db;
@@ -13,6 +14,7 @@ db.once('open', function(){
     require('./routes')(app);
 
     app.use(express.static(__dirname + '/public'));
+    app.use(morgan('dev'));
 
     app.listen(port, function () {
         console.log("Express server listening on port " + port);

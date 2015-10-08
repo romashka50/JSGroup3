@@ -10,12 +10,12 @@ var UserSchema = Schema({
     dateOfBirth: {type: Date, default: Date.now},
     posts: [{type: Number, ref: 'post'}],
     age: Number
-}, {collection: 'User', version: false});
+});
 
 var PostSchema = Schema({
     _id: Number,
     name: String
-}, {collection: 'Post'});
+});
 
 UserSchema.pre('save', function(next){
     var dOb = this.dateOfBirth;
