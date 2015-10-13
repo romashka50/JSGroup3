@@ -5,11 +5,11 @@
         <th>DateOfBirth</th>
     </thead>
     <% users.forEach(function(user){ %>
-       <tr>
+       <tr id="<%= user._id%>">
            <td><%=user.name.first%></td>
            <td><%=user.name.last%></td>
            <td><%=user.dateOfBirth%></td>
        </tr>
     <%})%>
 </table>
-
+<button id="createBtn">Create User</button>

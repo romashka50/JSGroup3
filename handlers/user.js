@@ -7,8 +7,21 @@ var Post = mongoose.model('post', PostSchema);
 var User = function () {
 	this.create = function (req, res, next) {
 		var body = req.body;
+		var firstName = body.firstName;
+		var lastName = body.lastName;
+		var dateOfBirth = body.dateOfBirth;
 
-		var user = new _User(body);
+		//Alya Validation need here
+
+		var data = {
+			name: {
+				first: firstName,
+				last: lastName
+			},
+			dateOfBirth: dateOfBirth
+		};
+
+		var user = new _User(data);
 
 		user.save(function (err, user) {
 			if (err) {

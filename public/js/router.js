@@ -1,6 +1,6 @@
 define([
 	'collections/users',
-	'views/user'
+	'views/user/user'
 ], function(UserCollection, UserView){
 	var Router = Backbone.Router.extend({
 
@@ -11,11 +11,17 @@ define([
 		},
 
 		users: function(){
+			var self = this;
 			var collection = new UserCollection();
 			var renderView = function(){
-				var view = new UserView({
+				if(self.userView){
+					self.userView.undelegateEvents();
+				}
+
+				self.userView = new UserView({
 					collection: collection
 				});
+				return self;
 			};
 
 			collection.fetch({reset: true});
