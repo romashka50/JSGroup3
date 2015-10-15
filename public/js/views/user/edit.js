@@ -1,20 +1,20 @@
 define([
 	'models/user',
-	'text!templates/user/create.html'
+	'text!templates/user/edit.html'
 ], function(User, userTemplate){
 	var View = Backbone.View.extend({
 		el: '#content',
 		template: _.template(userTemplate),
 
 		events: {
-			'click #saveBtn': 'createItem'
+			'click #saveBtn': 'saveItem'
 		},
 
-		initialize: function(){
-			this.render();
+		initialize: function(model){
+			this.render(model);
 		},
 
-		createItem: function(e){
+		saveItem: function(e){
 			var self = this;
 			var thisEl = this.$el;
 			var data;
@@ -42,8 +42,11 @@ define([
 			});
 		},
 
-		render: function(){
-			this.$el.html(this.template());
+		render: function(model){
+			var dialogString = this.template(model);
+			this.$el = $(dialogString).dialog();
+
+			this.$el.find('#dateOfBirth').datepicker();
 
 			return this;
 		}
